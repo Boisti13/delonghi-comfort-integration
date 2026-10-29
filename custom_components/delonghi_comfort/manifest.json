@@ -1,16 +1,18 @@
 {
   "domain": "delonghi_comfort",
   "name": "De'Longhi Comfort",
-  "version": "1.0.0",
-  "documentation": "https://github.com/philm5/delonghi-comfort-integration",
-  "requirements": [
-    "requests>=2.31.0"
-  ],
-  "dependencies": [],
   "codeowners": [
+    "@Boisti13",
     "@philm5"
   ],
   "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/Boisti13/delonghi-comfort-integration",
+  "homeassistant": "2024.11.0",
   "iot_class": "cloud_polling",
-  "homeassistant": "2023.1.0"
+  "issue_tracker": "https://github.com/Boisti13/delonghi-comfort-integration/issues",
+  "requirements": [
+    "requests>=2.31.0"
+  ],
+  "version": "0.2.0"
 }

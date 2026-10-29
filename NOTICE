@@ -26,3 +26,11 @@ Modifications and additions to the original code:
 - Documentation and examples
 
 All modifications are licensed under the Apache License 2.0.
+
+Fork
+----
+This repository (https://github.com/Boisti13/delonghi-comfort-integration)
+is a fork of https://github.com/philm5/delonghi-comfort-integration by
+philm5, maintained by Boisti13 since 2026-10-29 because the original has
+had no activity since November 2025. Changes made in the fork are listed
+in CHANGELOG.md; they are licensed under the Apache License 2.0 as well.

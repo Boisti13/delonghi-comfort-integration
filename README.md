@@ -1,205 +1,154 @@
-# De'Longhi Comfort Home Assistant Integration
+# De'Longhi Comfort for Home Assistant
 
-[![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg)](https://github.com/custom-components/hacs)
-[![GitHub release](https://img.shields.io/github/release/philm5/delonghi-comfort-integration.svg)](https://github.com/philm5/delonghi-comfort-integration/releases/)
+[![GitHub release](https://img.shields.io/github/v/release/Boisti13/delonghi-comfort-integration)](https://github.com/Boisti13/delonghi-comfort-integration/releases)
+[![License](https://img.shields.io/github/license/Boisti13/delonghi-comfort-integration)](LICENSE)
+[![HACS](https://img.shields.io/badge/HACS-custom-orange.svg)](https://hacs.xyz/docs/faq/custom_repositories/)
+[![Validate](https://github.com/Boisti13/delonghi-comfort-integration/actions/workflows/validate.yml/badge.svg)](https://github.com/Boisti13/delonghi-comfort-integration/actions/workflows/validate.yml)
 
-This repository contains a comprehensive Home Assistant integration for De'Longhi Comfort air conditioning and dehumidification devices. The integration provides full control and monitoring capabilities through Home Assistant's user interface.
+A Home Assistant integration for De'Longhi Comfort devices — Pinguino portable
+air conditioners, dehumidifiers and heaters that you normally control with the
+De'Longhi Comfort app. It logs in to De'Longhi's cloud with your app account
+and polls your devices, so they show up in Home Assistant with a thermostat,
+sensors and switches.
 
-## ⚠️ Disclaimer
+> **Maintained fork.** This is a fork of
+> [philm5/delonghi-comfort-integration](https://github.com/philm5/delonghi-comfort-integration),
+> which has had no activity since November 2025. It keeps the same domain
+> (`delonghi_comfort`), so switching an existing install over keeps your
+> devices, entities and settings. Fixes so far are in the
+> [CHANGELOG](CHANGELOG.md).
 
-**IMPORTANT**: This integration is provided "as-is" without any warranty or guarantee. The author takes no responsibility for any damage, data loss, or issues that may arise from using this integration. Use at your own risk.
+## Highlights
 
-**AI-Assisted Development**: Much of the work converting this to a Home Assistant integration was done using **GitHub Copilot** and other AI assistance tools. This README was also created with the help of an LLM model. While every effort has been made to ensure accuracy and functionality, please thoroughly test before deploying in production environments.
+- **Thermostat entity** with cool, heat, dry, fan-only and off, target
+  temperature and fan speed.
+- **Sensors** for room temperature and humidity, status, mode, fan speed,
+  filter and operating hours, power use, Wi-Fi signal and error code.
+- **Switches and controls** for power, silent mode, temperature and humidity
+  setpoints and device mode.
+- **Heaters** (De'Longhi `DL-heater` models) get their own climate entity,
+  display brightness, eco and child lock.
+- **Set up in the UI** — no YAML; polling interval adjustable under
+  *Configure*.
+- **Works with current Home Assistant**: the options dialog and device
+  registration are fixed for HA 2025.12 and later.
 
-This integration is based on the excellent work of:
-- **[rtfpessoa/delonghi-comfort-client](https://github.com/rtfpessoa/delonghi-comfort-client)** - Thank you for the initial client implementation
-- **[duckwc/ECAMpy](https://github.com/duckwc/ECAMpy)** - Thanks for the authentication and token conversion code
+## Install
 
-## 🚀 Features
+| Step | What to do |
+|---|---|
+| 1 | In HACS: ⋮ → **Custom repositories** → add `https://github.com/Boisti13/delonghi-comfort-integration`, category **Integration**. |
+| 2 | Find **De'Longhi Comfort** in HACS and download it. |
+| 3 | Restart Home Assistant. |
+| 4 | **Settings → Devices & services → Add integration → De'Longhi Comfort**, then log in with your De'Longhi Comfort app account. |
 
-### Climate Control
-- **HVAC Modes**: Cool, Heat, Dry (dehumidify), Fan Only, Off
-- **Temperature Control**: Set target temperature with precise control
-- **Fan Speed Control**: Multiple fan speed settings
-- **Real-time Status**: Live updates of device status and settings
+Manual install: copy `custom_components/delonghi_comfort/` into your Home
+Assistant `config/custom_components/` folder and restart.
 
-### Sensors
-- **Room Temperature**: Current ambient temperature
-- **Target Temperature**: Current temperature setpoint
-- **Room Humidity**: Current humidity levels
-- **Device Status**: Operating status (on/off/standby)
-- **Device Mode**: Current operating mode
-- **Fan Speed**: Current fan speed setting
+**Coming from philm5's version?** Remove that repository in HACS (your
+integration entry stays), add this one as above, download it and restart.
+The domain is the same, so nothing else changes.
 
-### Controls
-- **Power Switch**: Turn device on/off
-- **Temperature Controls**: Precise temperature adjustment
-- **Mode Selection**: Easy switching between operating modes
-- **Fan Speed Selection**: Control fan speed levels
+Requires Home Assistant 2024.11 or newer.
 
-### Advanced Features
-- **Configuration Flow**: Easy setup through Home Assistant UI
-- **Device Discovery**: Automatic detection of De'Longhi devices
-- **Coordinator Pattern**: Efficient data updates with minimal API calls
-- **Cloud Polling**: Regular status updates from De'Longhi cloud services
+## Entities
 
-## 📋 Requirements
+Example for an air conditioner named *Pinguino* (entity IDs follow the
+device name you gave it in the app):
 
-- Home Assistant 2023.1.0 or newer
-- De'Longhi Comfort account with registered devices
-- Internet connection for cloud API access
+| Entity | What it is |
+|---|---|
+| `climate.pinguino` | Thermostat: mode, target temperature, fan speed |
+| `switch.pinguino_device_power`, `switch.pinguino_silent_mode` | Power, silent mode |
+| `number.pinguino_temperature_setpoint`, `number.pinguino_humidity_setpoint` | Setpoints |
+| `select.pinguino_device_mode` | Operating mode |
+| `sensor.pinguino_room_temperature`, `sensor.pinguino_room_humidity` | Room readings |
+| `sensor.pinguino_device_status`, `_device_mode`, `_fan_speed`, `_silent_mode` | Current state |
+| `sensor.pinguino_filter_hours`, `_operating_hours`, `_power_consumption` | Usage |
+| `sensor.pinguino_wifi_signal_strength`, `sensor.pinguino_error_code` | Diagnostics |
 
-## 🔧 Installation
+## Example
 
-### Method 1: HACS (Recommended)
-1. Open HACS in Home Assistant
-2. Go to "Integrations"
-3. Click the three dots menu and select "Custom repositories"
-4. Add this repository URL and select "Integration" as the category
-5. Find "De'Longhi Comfort" in the list and install it
-6. Restart Home Assistant
+Cool the room in the afternoon when it gets warm and you're home:
 
-### Method 2: Manual Installation
-1. **Download the integration**:
-   ```bash
-   git clone https://github.com/philm5/delonghi-comfort-integration.git
-   ```
+```yaml
+automation:
+  - alias: "Pinguino – Cool on hot afternoons"
+    triggers:
+      - trigger: numeric_state
+        entity_id: sensor.pinguino_room_temperature
+        above: 26
+    conditions:
+      - condition: time
+        after: "13:00:00"
+        before: "20:00:00"
+      - condition: state
+        entity_id: person.you
+        state: home
+    actions:
+      - action: climate.set_hvac_mode
+        target:
+          entity_id: climate.pinguino
+        data:
+          hvac_mode: cool
+      - action: climate.set_temperature
+        target:
+          entity_id: climate.pinguino
+        data:
+          temperature: 24
+```
 
-2. **Copy to custom_components**:
-   Copy the `custom_components/delonghi_comfort` folder to your Home Assistant `custom_components` directory:
-   ```
-   config/
-   └── custom_components/
-       └── delonghi_comfort/
-           ├── __init__.py
-           ├── api.py
-           ├── climate.py
-           ├── config_flow.py
-           ├── const.py
-           ├── coordinator.py
-           ├── manifest.json
-           ├── number.py
-           ├── select.py
-           ├── sensor.py
-           ├── switch.py
-           └── translations/
-               └── en.json
-   ```
+## Configuration
 
-3. **Restart Home Assistant**
+*Configure* on the integration sets the **polling interval** (default 15 s).
+The data comes from De'Longhi's cloud, so a longer interval (for example
+60 s) is kinder to it and is fine for a room air conditioner. The integration
+needs internet access; while the cloud is unreachable the entities show as
+unavailable.
 
-## ⚙️ Configuration
+Debug logging:
 
-### Initial Setup
-1. Navigate to **Settings** → **Devices & Services** in Home Assistant
-2. Click **Add Integration**
-3. Search for **De'Longhi Comfort**
-4. Enter your De'Longhi Comfort account credentials:
-   - **Username**: Your De'Longhi account email
-   - **Password**: Your De'Longhi account password
-   - **Language**: Select your preferred language/region
-   - **Scan Interval**: Update frequency (default: 60 seconds)
-
-### Configuration Options
-- **Scan Interval**: How often to poll the API for updates (30-300 seconds)
-- **Device Selection**: Choose which devices to integrate
-
-## 🏠 Usage
-
-### Dashboard Cards
-Once configured, you'll have access to various entities:
-
-#### Climate Entity
-- `climate.delonghi_comfort_[device_id]`
-- Full climate control with temperature, mode, and fan speed
-
-#### Sensors
-- `sensor.delonghi_comfort_[device_id]_room_temperature`
-- `sensor.delonghi_comfort_[device_id]_room_humidity`
-- `sensor.delonghi_comfort_[device_id]_target_temperature`
-- `sensor.delonghi_comfort_[device_id]_device_status`
-
-#### Controls
-- `switch.delonghi_comfort_[device_id]_power`
-- `number.delonghi_comfort_[device_id]_temperature`
-- `select.delonghi_comfort_[device_id]_mode`
-- `select.delonghi_comfort_[device_id]_fan_speed`
-
-## 🐛 Troubleshooting
-
-### Common Issues
-1. **Authentication Errors**: Verify your De'Longhi account credentials
-2. **No Devices Found**: Ensure devices are registered in the De'Longhi app
-3. **Connection Timeouts**: Check internet connection and API status
-4. **Slow Updates**: Adjust scan interval in configuration
-
-### Debug Logging
-Add to your `configuration.yaml`:
 ```yaml
 logger:
-  default: warning
   logs:
     custom_components.delonghi_comfort: debug
 ```
 
-## 🤝 Contributing
+## Layout
 
-Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
-
-### Development Setup
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-### Automated Workflows
-
-This repository includes GitHub Actions for quality assurance and release management:
-
-#### 🔍 Validation Workflow
-- **Triggers**: Runs on every push to main/master and on pull requests
-- **Validates**: 
-  - Python syntax and compilation
-  - Home Assistant manifest.json structure
-  - HACS compatibility requirements
-  - File structure integrity
-  - Basic code quality checks
-
-#### 🚀 Release Workflow
-- **Triggers**: Runs when tags are pushed (e.g., `v1.0.0`) or manually triggered
-- **Creates**:
-  - `delonghi_comfort.zip` - Integration files only (for HACS/manual install)
-  - `delonghi-comfort-integration-[version].zip` - Complete package with documentation
-  - GitHub release with auto-generated release notes
-- **Updates**: Automatically updates version in manifest.json to match the tag
-
-To create a new release:
-```bash
-git tag v1.0.0
-git push origin v1.0.0
+```
+custom_components/delonghi_comfort/
+  __init__.py       # setup: log in, find devices, one coordinator per device
+  api.py            # De'Longhi cloud API (login, token, device properties)
+  coordinator.py    # polling, shared device info
+  climate.py        # air-conditioner and heater thermostats
+  sensor.py, switch.py, number.py, select.py
+  config_flow.py    # login dialog and options (polling interval)
+  translations/en.json, icons.json, manifest.json
+.github/workflows/validate.yml   # syntax, manifest and HACS checks on every push
 ```
 
-## 📄 License
+## Development
 
-This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
+- Branches: `main` (releases) and `dev` (work). Work on `dev`, merge to
+  `main` for a release.
+- Release: bump `version` in `manifest.json`, move *Unreleased* in the
+  CHANGELOG to the new version, tag `vX.Y.Z` on `main` and create the GitHub
+  release with that CHANGELOG section as notes (`gh release create`). HACS
+  offers the new version from the release.
+- Test on a real Home Assistant before releasing: the integration talks to
+  De'Longhi's cloud, so there are no offline tests.
+- Changes from the original repository can be pulled in with
+  `git fetch upstream` (remote `upstream` = philm5's repository).
 
-### License Attribution
+## Credits and license
 
-This project incorporates code from the following Apache 2.0 licensed projects:
-- **[rtfpessoa/delonghi-comfort-client](https://github.com/rtfpessoa/delonghi-comfort-client)** - Licensed under Apache 2.0
-- **[duckwc/ECAMpy](https://github.com/duckwc/ECAMpy)** - Authentication and token conversion code
+Apache License 2.0 — see [LICENSE](LICENSE) and [NOTICE](NOTICE).
 
-All modifications and additions to the original code are also licensed under Apache 2.0. See the NOTICE file for detailed attribution information.
+- **[philm5](https://github.com/philm5/delonghi-comfort-integration)** wrote
+  this integration; this fork continues it.
+- **[rtfpessoa/delonghi-comfort-client](https://github.com/rtfpessoa/delonghi-comfort-client)**
+  for the original client, and **[duckwc/ECAMpy](https://github.com/duckwc/ECAMpy)**
+  for the authentication and token code.
 
-## 🙏 Acknowledgments
-
-- **[rtfpessoa](https://github.com/rtfpessoa)** for the original [delonghi-comfort-client](https://github.com/rtfpessoa/delonghi-comfort-client)
-- **[duckwc](https://github.com/duckwc)** for the authentication code from [ECAMpy](https://github.com/duckwc/ECAMpy)
-- The Home Assistant community for guidance and best practices
-
-## 📞 Support
-
-- Create an issue on GitHub for bug reports
-- Check existing issues before creating new ones
-- Provide logs and device information when reporting issues
+Provided as-is, without warranty. Not affiliated with De'Longhi.
