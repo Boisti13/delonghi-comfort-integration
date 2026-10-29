@@ -87,15 +87,15 @@ class DelonghiComfortConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     @callback
     def async_get_options_flow(config_entry):
         """Get the options flow for this handler."""
-        return DelonghiComfortOptionsFlow(config_entry)
+        return DelonghiComfortOptionsFlow()
 
 
 class DelonghiComfortOptionsFlow(config_entries.OptionsFlow):
-    """Handle options flow for De'Longhi Comfort integration."""
+    """Handle options flow for De'Longhi Comfort integration.
 
-    def __init__(self, config_entry):
-        """Initialize options flow."""
-        self.config_entry = config_entry
+    HA (2025.12+) provides self.config_entry itself; assigning it raised
+    "config_entry has no setter".
+    """
 
     async def async_step_init(self, user_input=None):
         """Manage the options."""
